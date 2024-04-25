@@ -3,6 +3,7 @@ package com.virtualfittingroom.ui.splash;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -11,10 +12,13 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.virtualfittingroom.R;
-import com.virtualfittingroom.login.LoginActivity;
+import com.virtualfittingroom.data.restApi.AuthApi;
+import com.virtualfittingroom.data.restApi.LoginResponse;
+
+import java.util.UUID;
 
 public class SplashScreen extends AppCompatActivity {
-
+    private static final String TAG = "ActivitySplashScreen";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -27,13 +31,22 @@ public class SplashScreen extends AppCompatActivity {
         });
 
         // TODO: check rather if user is logged on
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                startActivity(new Intent(SplashScreen.this, LoginActivity.class));
-//                startActivity(new Intent());
-                finish();
-            }
-        }, 2000);
+        AuthApi authApi = new AuthApi(getBaseContext());
+
+        authApi.login(
+                "4mail@site.com",
+                "password",
+                new AuthApi.LoginCallback() {
+                    @Override
+                    public void onSuccess(LoginResponse loginResponse) {
+                        Log.d(TAG, "onSuccess: Login success");
+                        Log.d(TAG, "onSuccess: " + loginResponse.getData().getUser().getName());
+                    }
+
+                    @Override
+                    public void onError(Throwable t) {
+                        Log.d(TAG, "onError: ", t);
+                    }
+                });
     }
 }

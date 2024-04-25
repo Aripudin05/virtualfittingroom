@@ -1,7 +1,9 @@
 package com.virtualfittingroom.data.restApi;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
+import android.content.Context;
+import android.util.Log;
+
+import com.virtualfittingroom.R;
 
 import java.io.IOException;
 
@@ -13,15 +15,19 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class RetrofitBuilder {
-    public static String BASE_API = "";
+    public static final String TAG = "RetrofitBuilder";
+    public static String BASE_URL;
     public String TOKEN = "";
     OkHttpClient okHttpClient;
     Retrofit retrofit;
+    Context context;
 
 //    Build retrofit from string
 
-    public RetrofitBuilder(String TOKEN) {
+    public RetrofitBuilder(String TOKEN, Context context) {
         this.TOKEN = TOKEN;
+        this.context = context;
+        this.BASE_URL = context.getString(R.string.BASE_URL);
     }
 
     public Retrofit build(){
@@ -40,10 +46,11 @@ public class RetrofitBuilder {
 
 //        Build new Retrofit
         this.retrofit = new Retrofit.Builder()
-                .baseUrl(this.BASE_API)
+                .baseUrl(this.BASE_URL)
                 .client(this.okHttpClient)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
+        Log.d(TAG, "build: "+retrofit.baseUrl().toString());
         return this.retrofit;
     }
 }

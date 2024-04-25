@@ -3,18 +3,44 @@ package com.virtualfittingroom.data.restApi;
 import com.virtualfittingroom.data.model.UserModel;
 
 public class LoginResponse extends Response{
-    private UserModel user;
+    LoginResponseData data;
 
-    public LoginResponse(String status, String message, UserModel user) {
+    public LoginResponse(String status, String message, LoginResponseData data) {
         super(status, message);
-        this.user = user;
+        this.data = data;
     }
 
-    public UserModel getUser() {
-        return user;
+    public LoginResponseData getData() {
+        return data;
     }
 
-    public void setUser(UserModel user) {
-        this.user = user;
+    public void setData(LoginResponseData data) {
+        this.data = data;
+    }
+
+    public static class LoginResponseData{
+        UserModel user;
+        String authToken;
+
+        public LoginResponseData(UserModel user, String authToken) {
+            this.user = user;
+            this.authToken = authToken;
+        }
+
+        public UserModel getUser() {
+            return user;
+        }
+
+        public void setUser(UserModel user) {
+            this.user = user;
+        }
+
+        public String getAuthToken() {
+            return authToken;
+        }
+
+        public void setAuthToken(String authToken) {
+            this.authToken = authToken;
+        }
     }
 }

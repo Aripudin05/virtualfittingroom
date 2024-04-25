@@ -1,15 +1,15 @@
-package com.virtualfittingroom.login;
+package com.virtualfittingroom.ui.login;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
-
 import android.util.Patterns;
 
 import com.virtualfittingroom.data.LoginRepository;
 import com.virtualfittingroom.data.Result;
 import com.virtualfittingroom.data.model.LoggedInUser;
 import com.virtualfittingroom.R;
+import com.virtualfittingroom.data.model.UserModel;
 
 public class LoginViewModel extends ViewModel {
 
@@ -31,14 +31,21 @@ public class LoginViewModel extends ViewModel {
 
     public void login(String username, String password) {
         // can be launched in a separate asynchronous job
-        Result<LoggedInUser> result = loginRepository.login(username, password);
+        loginRepository.login(
+                username,
+                password,
+                new LoginRepository.RepositoryOnLoginCallback() {
+                    @Override
+                    public void onSuccess(UserModel user) {
+                        loginResult.setValue(new LoginResult(new LoggedInUserView(user.getName())));
+                    }
 
-        if (result instanceof Result.Success) {
-            LoggedInUser data = ((Result.Success<LoggedInUser>) result).getData();
-            loginResult.setValue(new LoginResult(new LoggedInUserView(data.getName())));
-        } else {
-            loginResult.setValue(new LoginResult(R.string.login_failed));
-        }
+                    @Override
+                    public void onFail(Throwable t) {
+                        loginResult.setValue(new LoginResult(R.string.login_failed));
+
+                    }
+                });
     }
 
     public void loginDataChanged(String username, String password) {

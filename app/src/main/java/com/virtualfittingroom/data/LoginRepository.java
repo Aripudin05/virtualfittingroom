@@ -1,6 +1,9 @@
 package com.virtualfittingroom.data;
 
 import com.virtualfittingroom.data.model.LoggedInUser;
+import com.virtualfittingroom.data.model.UserModel;
+import com.virtualfittingroom.data.restApi.AuthApi;
+import com.virtualfittingroom.data.restApi.LoginResponse;
 
 /**
  * Class that requests authentication and user information from the remote data source and
@@ -10,45 +13,76 @@ public class LoginRepository {
 
     private static volatile LoginRepository instance;
 
-    private LoginDataSource dataSource;
+    private AuthApi authApi;
 
     // If user credentials will be cached in local storage, it is recommended it be encrypted
     // @see https://developer.android.com/training/articles/keystore
-    private LoggedInUser user = null;
+    private UserModel user = null;
 
-    // private constructor : singleton access
-    private LoginRepository(LoginDataSource dataSource) {
-        this.dataSource = dataSource;
+    public LoginRepository(AuthApi authApi) {
+        this.authApi = authApi;
     }
 
-    public static LoginRepository getInstance(LoginDataSource dataSource) {
-        if (instance == null) {
-            instance = new LoginRepository(dataSource);
+    public static LoginRepository getInstance(AuthApi authApi) {
+        if(instance == null){
+            instance = new LoginRepository(authApi);
         }
         return instance;
+    }
+
+    public void login(String username, String password, RepositoryOnLoginCallback repositoryOnLoginCallback) {
+        // handle login
+        // get login remote
+        this.authApi.login(
+                username,
+                password,
+                new AuthApi.LoginCallback() {
+                    @Override
+                    public void onSuccess(LoginResponse loginResponse) {
+                        setLoggedInUser(loginResponse.getData().getUser());
+                        repositoryOnLoginCallback.onSuccess(loginResponse.getData().getUser());
+                    }
+
+                    @Override
+                    public void onError(Throwable t) {
+                        repositoryOnLoginCallback.onFail(t);
+                    }
+                }
+        );
+    }
+
+    public void logout() {
+        user = null;
+        // remote logout
+        // local
+        setLoggedInUser(null);
     }
 
     public boolean isLoggedIn() {
         return user != null;
     }
 
-    public void logout() {
-        user = null;
-        dataSource.logout();
-    }
-
-    private void setLoggedInUser(LoggedInUser user) {
+    private void setLoggedInUser(UserModel user) {
         this.user = user;
         // If user credentials will be cached in local storage, it is recommended it be encrypted
         // @see https://developer.android.com/training/articles/keystore
+//      TODO: SAVE LOCAL
+
     }
 
-    public Result<LoggedInUser> login(String username, String password) {
-        // handle login
-        Result<LoggedInUser> result = dataSource.login(username, password);
-        if (result instanceof Result.Success) {
-            setLoggedInUser(((Result.Success<LoggedInUser>) result).getData());
-        }
-        return result;
+    private UserModel getSavedUser(){
+
+        return null;
+    }
+
+    private void syncAuth(){
+        // get local
+
+        // check remote
+    }
+
+    public interface RepositoryOnLoginCallback{
+        void onSuccess(UserModel user);
+        void onFail(Throwable t);
     }
 }

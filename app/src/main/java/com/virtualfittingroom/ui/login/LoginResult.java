@@ -1,4 +1,4 @@
-package com.virtualfittingroom.login;
+package  com.virtualfittingroom.ui.login;
 
 import androidx.annotation.Nullable;
 

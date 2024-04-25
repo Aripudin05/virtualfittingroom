@@ -1,13 +1,23 @@
 package com.virtualfittingroom.data.model;
 
 public class UserModel {
-    private String name, mail, avatar;
+    private String name, email, avatar, authToken;
 
-    public UserModel(String name, String mail, String avatar) {
+    public UserModel(String name, String email, String avatar, String authToken) {
         this.name = name;
-        this.mail = mail;
+        this.email = email;
         this.avatar = avatar;
+        this.authToken = authToken;
     }
+
+    public String getAuthToken() {
+        return authToken;
+    }
+
+    public void setAuthToken(String authToken) {
+        this.authToken = authToken;
+    }
+
 
     public String getName() {
         return name;
@@ -17,12 +27,12 @@ public class UserModel {
         this.name = name;
     }
 
-    public String getMail() {
-        return mail;
+    public String getEmail() {
+        return email;
     }
 
-    public void setMail(String mail) {
-        this.mail = mail;
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public String getAvatar() {

@@ -1,4 +1,4 @@
-package com.virtualfittingroom.login;
+package  com.virtualfittingroom.ui.login;
 
 /**
  * Class exposing authenticated user details to the UI.

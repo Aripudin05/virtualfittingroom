@@ -1,16 +1,12 @@
-package com.virtualfittingroom.login;
+package  com.virtualfittingroom.ui.login;
 
 import android.app.Activity;
-
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
-
 import android.os.Bundle;
-
 import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
 import androidx.appcompat.app.AppCompatActivity;
-
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.KeyEvent;
@@ -23,43 +19,48 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.virtualfittingroom.R;
+import com.virtualfittingroom.ui.login.LoginViewModel;
+import com.virtualfittingroom.ui.login.LoginViewModelFactory;
 import com.virtualfittingroom.databinding.ActivityLoginBinding;
 
 public class LoginActivity extends AppCompatActivity {
 
     private LoginViewModel loginViewModel;
-    private ActivityLoginBinding binding;
+private ActivityLoginBinding binding;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        binding = ActivityLoginBinding.inflate(getLayoutInflater());
-        setContentView(binding.getRoot());
+     binding = ActivityLoginBinding.inflate(getLayoutInflater());
+     setContentView(binding.getRoot());
 
-        loginViewModel = new ViewModelProvider(this, new LoginViewModelFactory())
-                .get(LoginViewModel.class);
+    loginViewModel =
+            new ViewModelProvider(
+                    this,
+                    new LoginViewModelFactory(this.getApplicationContext())
+            ).get(LoginViewModel.class);
 
-        final EditText usernameEditText = binding.username;
-        final EditText passwordEditText = binding.password;
-        final Button loginButton = binding.login;
-        final ProgressBar loadingProgressBar = binding.loading;
+    final EditText usernameEditText = binding.username;
+    final EditText passwordEditText = binding.password;
+    final Button loginButton = binding.login;
+    final ProgressBar loadingProgressBar = binding.loading;
 
-        loginViewModel.getLoginFormState().observe(this, new Observer<LoginFormState>() {
-            @Override
-            public void onChanged(@Nullable LoginFormState loginFormState) {
-                if (loginFormState == null) {
-                    return;
-                }
-                loginButton.setEnabled(loginFormState.isDataValid());
-                if (loginFormState.getUsernameError() != null) {
-                    usernameEditText.setError(getString(loginFormState.getUsernameError()));
-                }
-                if (loginFormState.getPasswordError() != null) {
-                    passwordEditText.setError(getString(loginFormState.getPasswordError()));
-                }
+    loginViewModel.getLoginFormState().observe(this, new Observer<LoginFormState>() {
+        @Override
+        public void onChanged(@Nullable LoginFormState loginFormState) {
+            if (loginFormState == null) {
+                return;
             }
-        });
+            loginButton.setEnabled(loginFormState.isDataValid());
+            if (loginFormState.getUsernameError() != null) {
+                usernameEditText.setError(getString(loginFormState.getUsernameError()));
+            }
+            if (loginFormState.getPasswordError() != null) {
+                passwordEditText.setError(getString(loginFormState.getPasswordError()));
+            }
+        }
+    });
 
         loginViewModel.getLoginResult().observe(this, new Observer<LoginResult>() {
             @Override

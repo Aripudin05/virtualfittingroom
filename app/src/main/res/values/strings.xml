@@ -23,4 +23,7 @@
     <string name="invalid_password">Password must be >5 characters</string>
     <string name="login_failed">"Login failed"</string>
     <string name="title_activity_splash_screen">SplashScreen</string>
+
+    <!--    API-->
+    <string name="BASE_URL">https://vfr.yanwardos.my.id/api/</string>
 </resources>

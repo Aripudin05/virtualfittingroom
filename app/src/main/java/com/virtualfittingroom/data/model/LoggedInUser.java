@@ -5,25 +5,19 @@ package com.virtualfittingroom.data.model;
  */
 public class LoggedInUser {
 
-    private String email;
-    private String name;
-    private String avatar;
+    private String userId;
+    private String displayName;
 
-    public LoggedInUser(String email, String name, String avatar) {
-        this.email = email;
-        this.name = name;
-        this.avatar = avatar;
+    public LoggedInUser(String userId, String displayName) {
+        this.userId = userId;
+        this.displayName = displayName;
     }
 
-    public String getEmail() {
-        return email;
+    public String getUserId() {
+        return userId;
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public String getAvatar() {
-        return avatar;
+    public String getDisplayName() {
+        return displayName;
     }
 }
