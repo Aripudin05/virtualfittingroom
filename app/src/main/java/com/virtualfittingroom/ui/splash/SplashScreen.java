@@ -18,6 +18,7 @@ import com.virtualfittingroom.data.restApi.LoginResponse;
 import java.util.UUID;
 
 public class SplashScreen extends AppCompatActivity {
+    // TEST
     private static final String TAG = "ActivitySplashScreen";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
